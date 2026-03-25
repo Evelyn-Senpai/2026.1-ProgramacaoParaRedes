@@ -1,7 +1,3 @@
-# s = [[1, 0, 0, 3, 2, 0, 5, 0, 0],
-#      [5, 3, 0, 4, 1, 0, 0, 0, 2], 
-#      [0, 4, 2, 6, 0, 0, 3, 4, 0]]
-
 '''
 Seja d(n) definido como a soma dos divisores próprios d n(números menores que n que dividem)
 n exatamente).
@@ -45,7 +41,7 @@ def f_b(B):
     return soma_div_b
 
 soma_total = 0
-for a in range(1, 10001):
+for a in range(1, 10000):
     b = f_a(a)
     r = f_b(b)
     if a != b and a == r and a < b:
@@ -62,7 +58,7 @@ def soma_a_b(n):
     return soma
 
 soma_total = 0
-for a in range(1, 10001):
+for a in range(1, 10000):
     b = soma_a_b(a)
     r = soma_a_b(b)
     if a != b and a == r and a < b:
