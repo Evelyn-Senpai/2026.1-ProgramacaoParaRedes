@@ -20,8 +20,9 @@ def pandigital(n):
 maior = 0    
 for i in range(1, 10000):
     if primo(i) and pandigital(i):
+        print('Esse número é primo pandigital: ', i)
         if i == 1:
-            maior = menor = i
+            maior = i
         else:
             if i > maior:
                 maior = i 
