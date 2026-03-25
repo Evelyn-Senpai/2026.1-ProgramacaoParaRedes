@@ -8,46 +8,45 @@ portanto, d(220) = 284. Os divisores próprios de 284 são 1, 2 4, 71 e 142; ent
 Calcule a soma de todos os números amigáveis menores que 10000.
 '''
 
-print('SEM FUNÇÕES')
-soma_total = 0
-for a in range(1, 10001):
-    soma_div_a = 0
-    for i in range(1, a):
-        if a % i == 0:
-            soma_div_a += i
-    b = soma_div_a
-    soma_div_b = 0
-    for i in range(1, b):
-        if b % i == 0:
-            soma_div_b += i
-    if a != b and a == soma_div_b and a < b:
-        print(f"{a} é amigo de {b}")
-        soma_total += a + b
-print(f'A soma de todos os números amigáveis é: {soma_total:.0f}')
+# print('SEM FUNÇÕES')
+# soma_total = 0
+# for a in range(1, 10001):
+#     soma_div_a = 0
+#     for i in range(1, a):
+#         if a % i == 0:
+#             soma_div_a += i
+#     b = soma_div_a
+#     soma_div_b = 0
+#     for i in range(1, b):
+#         if b % i == 0:
+#             soma_div_b += i
+#     if a != b and a == soma_div_b and a < b:
+#         print(f"{a} é amigo de {b}")
+#         soma_total += a + b
+# print(f'A soma de todos os números amigáveis é: {soma_total:.0f}')
 
-print('COM FUNÇÕES')
-def f_a(A):
-    soma_div_a = 0
-    for i in range(1, A):
-        if A % i == 0:
-            soma_div_a += i
-    return soma_div_a
+# print('COM FUNÇÕES')
+# def f_a(A):
+#     soma_div_a = 0
+#     for i in range(1, A):
+#         if A % i == 0:
+#             soma_div_a += i
+#     return soma_div_a
 
-def f_b(B):
-    soma_div_b = 0
-    for i in range(1, B):
-        if B % i == 0:
-            soma_div_b += i
-    return soma_div_b
+# def f_b(B):
+#     soma_div_b = 0
+#     for i in range(1, B):
+#         if B % i == 0:
+#             soma_div_b += i
+#     return soma_div_b
 
-soma_total = 0
-for a in range(1, 10000):
-    b = f_a(a)
-    r = f_b(b)
-    if a != b and a == r and a < b:
-        print(f'{a} é amigo de {b}')
-        soma_total += a + b
-print(f'A soma de todos os números amigáveis é: {soma_total:.0f}')
+# soma_total = 0
+# for a in range(1, 10000):
+#     b = f_a(a)
+#     if a != b and a == f_b(b) and a < b:
+#         print(f'{a} é amigo de {b}')
+#         soma_total += a + b
+# print(f'A soma de todos os números amigáveis é: {soma_total:.0f}')
 
 print('COM UMA ÚNICA FUNÇÃO')
 def soma_a_b(n):
@@ -60,8 +59,7 @@ def soma_a_b(n):
 soma_total = 0
 for a in range(1, 10000):
     b = soma_a_b(a)
-    r = soma_a_b(b)
-    if a != b and a == r and a < b:
+    if a != b and a == soma_a_b(b) and a < b:
         print(f'{a} é amigo de {b}')
         soma_total += a + b
-print(f'A soma de todos os números amigáveis é: {soma_total:.0f}')
+print(f'A soma de todos os números amigáveis é: {soma_total}')
