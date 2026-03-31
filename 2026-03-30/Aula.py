@@ -41,10 +41,6 @@ print(tTexto)
 
 '''Trabalhando com bits específicos'''
 
-# bit 0 → leitura
-# bit 1 → escrita
-# bit 2 → admin
-
 # Verificar o bit na posição 0
 num = 5 # 0101
 maskNum = (1 << 0) # 0001
