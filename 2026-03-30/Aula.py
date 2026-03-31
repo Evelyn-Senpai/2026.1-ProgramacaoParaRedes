@@ -41,6 +41,13 @@ print(tTexto)
 
 '''Trabalhando com bits específicos'''
 
+# & → verificar
+# | → ligar
+# ^ → alternar
+# & ~ → desligar
+
+# valor base << quantidade de deslocamentos
+
 # Verificar o bit na posição 0
 num = 5 # 0101
 maskNum = (1 << 0) # 0001
