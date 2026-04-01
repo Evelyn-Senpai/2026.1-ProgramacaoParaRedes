@@ -60,3 +60,14 @@ def alternar_bit(num, pos):
     return (num ^ (1 << pos))
 # Programa principal
 print(alternar_bit(5, 2)) # 1
+'''15'''
+def ativar_leitura_escrita(p):
+    return ((p | (1 << 0)) | (p | (1 << 1)))
+def verifica_admin(p):
+    if (p & (1 << 2)) == 1:
+        return True
+    else: 
+        return False
+# Programa principal
+permissao = 0
+print(ativar_leitura_escrita(permissao))
