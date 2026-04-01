@@ -48,6 +48,11 @@ print(tTexto)
 
 # valor base << quantidade de deslocamentos
 
+# 1 << 0 → 0001  (bit 0)
+# 1 << 1 → 0010  (bit 1)
+# 1 << 2 → 0100  (bit 2)
+# 1 << 3 → 1000  (bit 3)
+
 # Verificar o bit na posição 0
 num = 5 # 0101
 maskNum = (1 << 0) # 0001
