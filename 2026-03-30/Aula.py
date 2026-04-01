@@ -69,3 +69,22 @@ print(numer & maskNumer) # 4
 numero = 5 # 0101
 maskNumero = (1 << 0) # 0001
 print(numero ^ maskNumero) # 4 (0100)
+
+'''Uso de bits como permissões'''
+
+# Cada bit representa algo
+# bit 0 → leitura   (pode ver)
+# bit 1 → escrita   (pode modificar)
+# bit 2 → admin     (controle total)
+
+# Em binário
+# 0 → não tem permissão
+# 1 → tem permissão
+
+# Exemplo
+# 000 → nenhuma permissão
+# 001 → só leitura
+# 010 → só escrita
+# 011 → leitura + escrita
+# 100 → só admin
+# 111 → tudo
