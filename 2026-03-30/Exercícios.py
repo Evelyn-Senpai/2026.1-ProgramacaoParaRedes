@@ -63,7 +63,7 @@ print(alternar_bit(5, 2)) # 1
 '''15'''
 def sistema_permissoes(p):
     ativaLeituraEscrita = ((p | (1 << 0)) | (p | (1 << 1))) # 0011
-    if (ativaLeituraEscrita & (1 << 2)) == 1:
+    if (ativaLeituraEscrita & (1 << 2)) != 0:
         return ativaLeituraEscrita # 0111
     else:
         ativaAdmin = (ativaLeituraEscrita | (1 << 2))
@@ -71,3 +71,14 @@ def sistema_permissoes(p):
 # Programa principal
 permissao = 0 # 0000
 print(sistema_permissoes(permissao)) # 7
+'''16'''
+def impar_par(n): # Com if
+    if (n & (1 << 0) != 0):
+        print('Ímpar')
+    else:
+        print('Par')
+def impar_par(n): # Sem if
+    print(['Par', 'Ímpar'][n & 1])
+# Programa principal 
+num = 7
+impar_par(num) # Ímpar
