@@ -82,3 +82,14 @@ def impar_par(n): # Sem if
 # Programa principal 
 num = 7
 impar_par(num) # Ímpar
+'''17'''
+def conta_bit(n):
+    cont = 0
+    strN = str(n)
+    for i in strN:
+        if (n & (1 << n[i])):
+            cont += 1
+    return cont
+# Programa principal
+num = 13 # 1101
+print(conta_bit(num)) # 3
