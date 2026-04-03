@@ -85,11 +85,9 @@ impar_par(num) # Ímpar
 '''17'''
 def conta_bit(n):
     cont = 0
-    strN = str(n)
-    tN = strN.encode('utf-8')
-    for i in tN:
-        if (n & (1 << i)):
-            cont += 1
+    while n > 0:
+        cont += n & 1
+        n = n >> 1
     return cont
 # Programa principal
 num = 13 # 1101
