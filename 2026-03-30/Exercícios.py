@@ -86,8 +86,9 @@ impar_par(num) # Ímpar
 def conta_bit(n):
     cont = 0
     strN = str(n)
-    for i in strN:
-        if (n & (1 << n[i])):
+    tN = strN.encode('utf-8')
+    for i in tN:
+        if (n & (1 << i)):
             cont += 1
     return cont
 # Programa principal
