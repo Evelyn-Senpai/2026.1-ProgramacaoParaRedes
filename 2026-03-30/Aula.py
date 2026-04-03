@@ -35,7 +35,7 @@ print(a)
 texto = "Olá"
 bTexto = texto.encode("utf-8")
 print(bTexto)
-# Byres -> string 
+# Bytes -> string 
 tTexto = bTexto.decode("utf-8")
 print(tTexto)
 
