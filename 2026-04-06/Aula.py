@@ -7,13 +7,6 @@ import struct
 # | Big-endian    | Mais significativo	| Redes           |
 # | Little-endian | Menos significativo | PCs modernos    |
 
-# | Símbolo | Significado          |
-# | ------- | -------------------- |
-# | `<`     | Little-endian        |
-# | `>`     | Big-endian           |
-# | `!`     | Network (big-endian) |
-# | `=`     | Padrão do sistema    |
-
 # Força o empacotamento em 2 bytes usando a ordem Big-Endian
 meuInt = 21579
 meuIntBytes = meuInt.to_bytes(2, 'big') 
@@ -32,13 +25,21 @@ print(dados)
 valor = struct.unpack('i', dados)
 print(valor)
 
-# | Código | Tipo            |
-# | ------ | --------------- |
-# | `i`    | inteiro         |
-# | `f`    | float           |
-# | `c`    | char            |
-# | `s`    | string          |
-# | `b`    | inteiro pequeno |
+# | Código | Tipo                  |
+# | ------ | --------------------- |
+# | `i`    | inteiro               |
+# | `f`    | float                 |
+# | `c`    | char                  |
+# | `s`    | string                |
+# | `b`    | inteiro pequeno       |
+# | `h`    | inteiro de dois bytes |
+
+# | Símbolo | Significado          |
+# | ------- | -------------------- |
+# | `<`     | Little-endian        |
+# | `>`     | Big-endian           |
+# | `!`     | Network (big-endian) |
+# | `=`     | Padrão do sistema    |
 
 '''Endianness e Struct'''
 
