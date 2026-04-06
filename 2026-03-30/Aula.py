@@ -35,6 +35,8 @@ print(a)
 texto = "Olá"
 bTexto = texto.encode("utf-8")
 print(bTexto)
+# Pega o valor em hexadecimal, converte para binário e depois para decimal
+print(int.from_bytes(bTexto))
 # Bytes -> string 
 tTexto = bTexto.decode("utf-8")
 print(tTexto)
