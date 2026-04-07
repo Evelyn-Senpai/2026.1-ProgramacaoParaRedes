@@ -58,6 +58,3 @@ dados = struct.pack('>I', 305419896)  # 0x12345678
 valor = struct.unpack('>I', dados)
 print(dados)  # bytes
 print(valor)  # (305419896,)
-
-'''Signed vs. Unsigned'''
-# Signed -> 
