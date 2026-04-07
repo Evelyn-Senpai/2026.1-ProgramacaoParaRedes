@@ -7,6 +7,14 @@ import struct
 # | Big-endian    | Mais significativo	| Redes           |
 # | Little-endian | Menos significativo | PCs modernos    |
 
+# (Controle)
+# | Símbolo | Significado          |
+# | ------- | -------------------- |
+# | `<`     | Little-endian        |
+# | `>`     | Big-endian           |
+# | `!`     | Network (big-endian) |
+# | `=`     | Padrão do sistema    |
+
 # Força o empacotamento em 2 bytes usando a ordem Big-Endian
 meuInt = 21579
 meuIntBytes = meuInt.to_bytes(2, 'big') 
@@ -25,21 +33,17 @@ print(dados)
 valor = struct.unpack('i', dados)
 print(valor)
 
-# | Código | Tipo                  |
-# | ------ | --------------------- |
-# | `i`    | inteiro               |
-# | `f`    | float                 |
-# | `c`    | char                  |
-# | `s`    | string                |
-# | `b`    | inteiro pequeno       |
-# | `h`    | inteiro de dois bytes |
-
-# | Símbolo | Significado          |
-# | ------- | -------------------- |
-# | `<`     | Little-endian        |
-# | `>`     | Big-endian           |
-# | `!`     | Network (big-endian) |
-# | `=`     | Padrão do sistema    |
+# (Formatos)
+# | Código | Tipo                                   | Tamanho |
+# | ------ | -------------------------------------- | ------- |
+# | `b`    | inteiro com sinal (signed char)        | 1 byte  |
+# | `B`    | inteiro sem sinal (unsigned char)      | 1 byte  |
+# | `h`    | inteiro com sinal (short)              | 2 bytes |
+# | `H`    | inteiro sem sinal (unsigned short)     | 2 bytes |
+# | `i`    | inteiro com sinal (int)                | 4 bytes |
+# | `I`    | inteiro sem sinal (unsigned int)       | 4 bytes |
+# | `q`    | inteiro com sinal (long long)          | 8 bytes |
+# | `Q`    | inteiro sem sinal (unsigned long long) | 8 bytes |
 
 '''Endianness e Struct'''
 
@@ -54,3 +58,6 @@ dados = struct.pack('>I', 305419896)  # 0x12345678
 valor = struct.unpack('>I', dados)
 print(dados)  # bytes
 print(valor)  # (305419896,)
+
+'''Signed vs. Unsigned'''
+# Signed -> 
