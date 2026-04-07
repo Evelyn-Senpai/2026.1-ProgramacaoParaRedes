@@ -41,3 +41,22 @@ pacote = b'\x45\x00\x00\x28'
 print(struct.unpack('!BBH', pacote)) # 69 0 40
 print('Tamanho total = ', 40)
 print('Versão = ', 69 >> 4)
+'''11'''
+print('! -> Garante que seja Big-endian.')
+print('B -> Primeiro valor de tamanho 1 byte sendo os 4 primeiros bits a versão e os 4 últimos bits o IHL.')
+print('B -> Segundo valor de tamanho 1 byte sendo o tipo de serviço.')
+print('H -> Terceiro valor de tamanho 2 bytes sendo o tamanho total.')
+print('H -> Quarto valor de tamanho 2 bytes sendo a identificação.')
+'''12'''
+print('Para garantir que os dados estejam no padrão de rede(Big-endian).')
+'''13'''
+import struct
+pacote = b'\x45\x00\x00\x3c\x1c\x46'
+print(struct.unpack('!BBHH', pacote)) # 69 0 60 7238
+print('Versão = ', 69 >> 4) # 4
+print('IHL = ', 69 & 0x0f) # 5
+print('Tamanho total = ', 60) # 60
+print('Versão + IHL → indica a versão do protocolo e o tamanho do cabeçalho\n' \
+    'Tipo de serviço → define prioridade/qualidade do pacote\n' \
+    'Tamanho total → tamanho total do pacote\n' \
+    'Identificação → identifica o pacote (fragmentação)')
