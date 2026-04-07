@@ -45,13 +45,13 @@ print(valor)
 # | `q`    | inteiro com sinal (long long)          | 8 bytes |
 # | `Q`    | inteiro sem sinal (unsigned long long) | 8 bytes |
 
-# | Posição  | Tipo        | Significado     |
-# | -------- | ----------- | --------------- |
-# | 1º valor | B (1 byte)  | Versão(Primeiros 4 bits) + IHL(Últimos 4 bits)    |
-# | 2º valor | B (1 byte)  | Tipo de serviço |
-# | 3º valor | H (2 bytes) | Tamanho total   |
-
-
+# Na rede
+# | Campo           | Posição  |
+# | --------------- | -------- |
+# | Versão + IHL    | 1º valor |
+# | Tipo de serviço | 2º valor |
+# | Tamanho total   | 3º valor |
+# | Identificação   | 4º valor |
 
 '''Endianness e Struct'''
 
