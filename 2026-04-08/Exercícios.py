@@ -35,3 +35,7 @@ desempacoteBigEndian = struct.unpack('>h', dados)
 desempacoteLittleEndian = struct.unpack('<h', dados)
 print(desempacoteBigEndian) # 100
 print(desempacoteLittleEndian) # 25600
+'''10'''
+import struct
+pacote = b'\x45\x00\x00\x28'
+print(struct.unpack('!BBH', pacote)) # 69 0 40
