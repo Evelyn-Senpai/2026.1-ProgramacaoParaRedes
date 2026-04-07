@@ -39,3 +39,5 @@ print(desempacoteLittleEndian) # 25600
 import struct
 pacote = b'\x45\x00\x00\x28'
 print(struct.unpack('!BBH', pacote)) # 69 0 40
+print('Tamanho total = ', 40)
+print('Versão = ', 69 >> 4)
