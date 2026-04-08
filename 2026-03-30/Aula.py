@@ -24,10 +24,10 @@ print(5 >> 1) # 2
 # Tipo bytes
 b = bytes([65, 66, 67])
 print(b)
-# Tipo bytearray (Mutável)
-a = bytes([77, 89, 254])
-a[0] = 68
-print(a)
+# # Tipo bytearray (Mutável)
+# a = bytes([77, 89, 254])
+# a[0] = 68
+# print(a)
 
 '''Converter strings <-> bytes'''
 
