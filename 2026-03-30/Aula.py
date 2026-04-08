@@ -29,17 +29,24 @@ a = bytes([77, 89, 254])
 a[0] = 68
 print(a)
 
-'''Converter string <-> bytes'''
+'''Converter strings <-> bytes'''
 
 # String -> bytes
 texto = "Olá"
 bTexto = texto.encode("utf-8")
 print(bTexto)
-# Pega o valor em hexadecimal, converte para binário e depois para decimal
-print(int.from_bytes(bTexto))
 # Bytes -> string 
 tTexto = bTexto.decode("utf-8")
 print(tTexto)
+
+'''Converter inteiros <-> bytes'''
+# Inteiro -> bytes
+n = 384
+nBytes = n.to_bytes(4, "big")
+print(nBytes)
+# Bytes -> Inteiro
+bN = int.from_bytes(nBytes, "big")
+print(bN)
 
 '''Trabalhando com bits específicos'''
 
