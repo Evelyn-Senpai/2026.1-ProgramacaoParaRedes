@@ -8,12 +8,13 @@ import struct
 # | Little-endian | Menos significativo | PCs modernos    |
 
 # (Controle)
-# | Símbolo | Significado          |
-# | ------- | -------------------- |
-# | `<`     | Little-endian        |
-# | `>`     | Big-endian           |
-# | `!`     | Network (big-endian) |
-# | `=`     | Padrão do sistema    |
+# | Símbolo | Significado                                      |
+# | ------- | ------------------------------------------------ |
+# | `<`     | Little-endian                                    |
+# | `>`     | Big-endian                                       |
+# | `!`     | Network (big-endian)                             |
+# | `=`     | Nativo do sistema (sem alinhamento, padrão fixo) |
+# | `@`     | Nativo do sistema (com alinhamento, nativo)      |
 
 # Força o empacotamento em 2 bytes usando a ordem Big-Endian
 meuInt = 21579
