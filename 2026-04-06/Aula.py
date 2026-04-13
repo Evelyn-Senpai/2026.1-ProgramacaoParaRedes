@@ -35,16 +35,16 @@ valor = struct.unpack('i', dados)
 print(valor)
 
 # (Formatos)
-# | Código | Tipo                                   | Tamanho |
-# | ------ | -------------------------------------- | ------- |
-# | `b`    | inteiro com sinal (signed char)        | 1 byte  |
-# | `B`    | inteiro sem sinal (unsigned char)      | 1 byte  |
-# | `h`    | inteiro com sinal (short)              | 2 bytes |
-# | `H`    | inteiro sem sinal (unsigned short)     | 2 bytes |
-# | `i`    | inteiro com sinal (int)                | 4 bytes |
-# | `I`    | inteiro sem sinal (unsigned int)       | 4 bytes |
-# | `q`    | inteiro com sinal (long long)          | 8 bytes |
-# | `Q`    | inteiro sem sinal (unsigned long long) | 8 bytes |
+# | Código | Tipo                                   | Tamanho |      Significado      |
+# | ------ | -------------------------------------- | ------- | --------------------- |
+# | `b`    | inteiro com sinal (signed char)        | 1 byte  | Positivos e negativos |
+# | `B`    | inteiro sem sinal (unsigned char)      | 1 byte  | Só positivos          |
+# | `h`    | inteiro com sinal (short)              | 2 bytes | Positivos e negativos |
+# | `H`    | inteiro sem sinal (unsigned short)     | 2 bytes | Só positivos          |
+# | `i`    | inteiro com sinal (int)                | 4 bytes | Positivos e negativos |
+# | `I`    | inteiro sem sinal (unsigned int)       | 4 bytes | Só positivos          |
+# | `q`    | inteiro com sinal (long long)          | 8 bytes | Positivos e negativos |
+# | `Q`    | inteiro sem sinal (unsigned long long) | 8 bytes | Só positivos          |
 
 # Na rede
 # | Campo           | Posição  |
