@@ -1,60 +1,46 @@
 '''Faça um programa que lê um arquivo e uma palavra chave e gera um arquivo cifrado com cada byte
 sendo um XOR com um byte da palavra chave.'''
 
-# import os
-
-# diretorio = os.path.dirname(__file__)
-# nomeArquivo = input("Digite o nome do arquivo: ")
-# palavraChave = input("Digite a palavra chave: ")
-# arquivo = f'{nomeArquivo}.txt'
-# open(f'{diretorio}\\{arquivo}', 'w').close()
-# open(f'{diretorio}\\{arquivo}', 'a')
-# arquivo.write(palavraChave)
-# arquivo.close()
-
-
-
-
-
-
-
-
-
-
 import os
-import sys
 
-if __name__ == '__main__':
-    diretorio = os.path.dirname(__file__)
+BLOCK_SIZE = 64536
 
-    nome_arquivo = input("Digite o nome do arquivo (sem extensão): ").strip()
-    if not nome_arquivo:
-        print("Nome do arquivo não pode estar vazio.")
-        sys.exit(1)
 
-    palavra_chave = input("Digite a palavra chave: ").strip()
-    if not palavra_chave:
-        print("A palavra chave não pode estar vazia.")
-        sys.exit(1)
+def cypher_block(block, key, start):
+    output = bytearray(len(block))
+    len_key = len(key)
+    for index in range(len(block)):
+        output[index] = block[index] ^ key[start]
+        start = (start + 1) % len_key        
+    return start, output
 
-    arquivo_entrada = f"{nome_arquivo}.txt"
-    caminho_entrada = os.path.join(diretorio, arquivo_entrada)
+def cypher_file(file_name, key):
+    if not os.path.isabs(file_name):
+        diretorio = os.path.dirname(__file__)
+        file_name = os.path.join(diretorio, file_name)
+        
+    old_file_name = f"{file_name}.bak"
+    try:
+        os.remove(old_file_name)
+    except FileNotFoundError:
+        None
+    os.rename (file_name, old_file_name)
 
-    if not os.path.isfile(caminho_entrada):
-        print(f"Arquivo '{arquivo_entrada}' não encontrado no diretório do script.")
-        sys.exit(1)
-
-    with open(caminho_entrada, 'rb') as f:
-        dados = f.read()
-
-    chave_bytes = palavra_chave.encode('utf-8')
-    dados_cifrados = bytearray(len(dados))
-    for i, byte in enumerate(dados):
-        dados_cifrados[i] = byte ^ chave_bytes[i % len(chave_bytes)]
-
-    arquivo_saida = f"{nome_arquivo}_cifrado.txt"
-    caminho_saida = os.path.join(diretorio, arquivo_saida)
-    with open(caminho_saida, 'wb') as f:
-        f.write(dados_cifrados)
-
-    print(f"Arquivo cifrado gerado: {arquivo_saida}")
+    try:  
+        with open(file_name, "wb") as out, open(old_file_name, "rb") as inp:
+            start = 0
+            key = key.encode('utf-8')
+            block = inp.read(BLOCK_SIZE)
+            while block:
+                start, cyphered = cypher_block(block, key, start)
+                out.write(cyphered)
+                block = inp.read(BLOCK_SIZE)
+    except FileNotFoundError as fnf:
+        print (f"Arquivo nao encontrado: {fnf.filename}")            
+        
+def main(file_name, key):
+    cypher_file(file_name, key)
+    
+if __name__ == "__main__":
+    main(input("Digite o nome do arquivo a cifrar: "),
+         input("Digite a palavra chave: "))
