@@ -1,6 +1,6 @@
 import struct
-ipv4 = str(input('Digite o número IPv4: ')) # 192.168.1.10
-num = int(input('Digite a máscara: ')) # 24
+ipv4 = str(input('Digite o número IPv4: '))
+num = int(input('Digite a máscara: '))
 octeto = ipv4.split('.') # Separa o endereço ipv4 em 4 partes
 ip = (int(octeto[0]) << 24) | (int(octeto[1]) << 16) | (int(octeto[2]) << 8) | (int(octeto[3])) # Convertendo cada parte em um número inteiro, e juntando em um único número de 32 bits
 mask = (0xFFFFFFFF << (32 - num)) & 0xFFFFFFFF # 32 é o tamanho do ipv4, então é subtraido num deste valor para achar quantos bits sobram para o host, 0xFFFFFFFF é 32 bits iguais a 1, então os bits de hosts são deslocados para esquerda ficando com 0 (porque não quero os hosts), e no final é feito um and com 0xFFFFFFFF para garantir que o resultado fique com 32 bits, a máscara é criada em formato inteiro, resultado = 255.255.255.0
