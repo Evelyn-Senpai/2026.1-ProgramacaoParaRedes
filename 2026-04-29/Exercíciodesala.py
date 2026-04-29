@@ -26,6 +26,7 @@ else:
     endian = 'little'
 
 cabPacote = abreArquivo.read(16)
+MACs = set()
 while cabPacote != b'':
     quantPacotes += 1
     tempoS = int.from_bytes(cabPacote[:4], endian)
@@ -39,7 +40,13 @@ while cabPacote != b'':
     
     abreArquivo.seek(tamanhoPac, 1)
 
+    pacote = abreArquivo.read(tamanhoPac)
+    MACs.add(pacote[0:6])
+    MACs.add(pacote[6:12])
+
     cabPacote = abreArquivo.read(16)
 
-abreArquivo.close()    
 print(f'Quantidade de pacotes: {quantPacotes}')
+MACs = [':'.join[f"{x:02x}"hex(x) for x in MAC] for MAC in MACs]
+print(f'MACs: {MACs}')
+abreArquivo.close()    
