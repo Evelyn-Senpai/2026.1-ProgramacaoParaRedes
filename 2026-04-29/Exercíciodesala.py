@@ -27,7 +27,7 @@ else:
 
 cabPacote = abreArquivo.read(16)
 while cabPacote != b'':
-    quantPAcotes += 1
+    quantPacotes += 1
     tempoS = int.from_bytes(cabPacote[:4], endian)
     tempoTXT = datetime(tempoS)
     
@@ -42,4 +42,4 @@ while cabPacote != b'':
     cabPacote = abreArquivo.read(16)
 
 abreArquivo.close()    
-print(f'Quantidade de pacotes: {quantPAcotes}')
+print(f'Quantidade de pacotes: {quantPacotes}')
