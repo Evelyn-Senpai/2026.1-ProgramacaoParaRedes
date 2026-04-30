@@ -47,6 +47,6 @@ while cabPacote != b'':
     cabPacote = abreArquivo.read(16)
 
 print(f'Quantidade de pacotes: {quantPacotes}')
-MACs = [':'.join[f"{x:02x}"hex(x) for x in MAC] for MAC in MACs]
-print(f'MACs: {MACs}')
+# MACs = [':'.join[f"{x:02x}"hex(x) for x in MAC] for MAC in MACs]
+# print(f'MACs: {MACs}')
 abreArquivo.close()    
