@@ -14,7 +14,7 @@ import os
 nomeArquivo = input('Digite o nome do arquivo: ')
 
 diretorio = os.path.dirname(__file__)
-arquivo = f'{diretorio}\\{nomeArquivo}'
+arquivo = os.path.join(diretorio, nomeArquivo)
 abreArquivo = open(arquivo, "rb")
 
 cabArquivo = abreArquivo.read(24)
@@ -27,10 +27,14 @@ else:
 
 cabPacote = abreArquivo.read(16)
 MACs = set()
-while cabPacote != b'':
+quantPacotes = 0
+pacIPv4 = 0
+while cabPacote[12:15] != b'':
     quantPacotes += 1
+    if cabPacote == b'0x800':
+        pacIPv4 += 1
     tempoS = int.from_bytes(cabPacote[:4], endian)
-    tempoTXT = datetime(tempoS)
+    tempoTXT = datetime.fromtimestamp(tempoS)
     
     
     tempoMS = cabPacote[4:8]
@@ -48,5 +52,6 @@ while cabPacote != b'':
 
 print(f'Quantidade de pacotes: {quantPacotes}')
 # MACs = [':'.join[f"{x:02x}"hex(x) for x in MAC] for MAC in MACs]
-# print(f'MACs: {MACs}')
+print(f'MACs: {MACs}')
+print(f'Quantidade de pacotes IPv4: {pacIPv4}')
 abreArquivo.close()    
