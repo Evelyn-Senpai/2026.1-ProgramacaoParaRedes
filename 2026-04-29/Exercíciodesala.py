@@ -11,28 +11,31 @@ Responder:
 from datetime import datetime 
 import os
 
-nomeArquivo = input('Digite o nome do arquivo: ')
+nomeArquivo = input('Digite o nome do arquivo: ') # Pega o arquivo no formatado TCPDUMP.
 
-diretorio = os.path.dirname(__file__)
-arquivo = os.path.join(diretorio, nomeArquivo)
-abreArquivo = open(arquivo, "rb")
+diretorio = os.path.dirname(__file__) # Procura o arquivo na pasta que está esse exercício.
+arquivo = os.path.join(diretorio, nomeArquivo) # Monta o caminho do arquivo.
+abreArquivo = open(arquivo, "rb") # Abre o arquivo como bytes.
 
-cabArquivo = abreArquivo.read(24)
+cabArquivo = abreArquivo.read(24) # Lê os primeiros 24 bytes do arquivo que é o HLEN (Cabeçalho)
 
-magic = int.from_bytes(cabArquivo[:4], 'big')
-if magic in (0xA1B2C3D4, 0xA1B23C4D):
+magic = int.from_bytes(cabArquivo[:4], 'big') # Lê os 4 primeiros bytes do HLEN que é o Magic Number (Big ou Little Endian).
+if magic == 0xA1B2C3D4: # Verifica se os bytes do arquivo vão ser lidos como Big ou Little Endian
     endian = 'big'
-else:
+elif magic == 0xA1B23C4D:
     endian = 'little'
 
-cabPacote = abreArquivo.read(16)
-MACs = set()
-quantPacotes = 0
-pacIPv4 = 0
-tcp = udp = 0
-conexoes = {}
-while cabPacote:
-    quantPacotes += 1
+cabPacote = abreArquivo.read(16) # Lê o cabeçalho do primeiro pacote (cada pacote tem 16 bytes).
+
+MACs = set() # Coleção para armazenar MACs únicos.
+
+quantPacotes = quantPACIPv4 = quantTCP = quantUDP = 0 # Contadores para: o número de pacotes, o número de pacotes IPv4, o número de protocolos TCPs nos pacotes IPv4, o número de protocolos UDPs nos pacotes IPv4. 
+
+conexoes = {} # Dicionário para contar as comunicações entre IPs.
+
+while cabPacote: # Enquanto no cabeçalho do pacote.
+
+    quantPacotes += 1 # A cada cabeçalho de pacote aberto é mais um no contador de pacotes.
 
     tamanhoOrig = cabPacote[12:16]
     tamanhoPac = int.from_bytes(cabPacote[8:12], endian)
@@ -40,14 +43,14 @@ while cabPacote:
     pacote = abreArquivo.read(tamanhoPac)
 
     if pacote[12:14] == b'\x08\x00':
-        pacIPv4 += 1
+        quantPACIPv4 += 1
 
         protocolo = pacote[23]
 
         if protocolo == 6:
-            tcp += 1
+            quantTCP += 1
         elif protocolo == 17:
-            udp += 1
+            quantUDP += 1
 
         ipOrigem = pacote[26:30]
         ipDestino = pacote[30:34]
@@ -70,9 +73,9 @@ print('----------------------------------------------------------------')
 print(f'Quantidade de pacotes: {quantPacotes}')
 forMACs = {':'.join(f"{x:02x}" for x in MAC) for MAC in MACs}
 print(f'MACs: {forMACs}')
-print(f'Quantidade de pacotes IPv4: {pacIPv4}')
-print(f'Quantidade de pacotes TCP capturados: {tcp}')
-print(f'Quantidade de pacotes UDP capturados: {udp}')
+print(f'Quantidade de pacotes IPv4: {quantPACIPv4}')
+print(f'Quantidade de pacotes TCP capturados: {quantTCP}')
+print(f'Quantidade de pacotes UDP capturados: {quantUDP}')
 if conexoes:
     maxConexoes = max(conexoes, key=conexoes.get)
     qtd = conexoes[maxConexoes]
