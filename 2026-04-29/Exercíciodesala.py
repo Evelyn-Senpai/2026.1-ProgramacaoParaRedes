@@ -37,10 +37,11 @@ while cabPacote: # Enquanto no cabeçalho do pacote.
 
     quantPacotes += 1 # A cada cabeçalho de pacote aberto é mais um no contador de pacotes.
 
-    tamanhoOrig = cabPacote[12:16]
-    tamanhoPac = int.from_bytes(cabPacote[8:12], endian)
+    tamanhoOrig = cabPacote[12:15] # Pega o tamanho original do pacote.
 
-    pacote = abreArquivo.read(tamanhoPac)
+    tamanhoPac = int.from_bytes(cabPacote[8:11], endian) # Pega o tamanho capturado do pacote, o que vou realmente usar.
+
+    pacote = abreArquivo.read(tamanhoPac) # Lê o tamanho do pacote capturado.
 
     if pacote[12:14] == b'\x08\x00':
         quantPACIPv4 += 1
