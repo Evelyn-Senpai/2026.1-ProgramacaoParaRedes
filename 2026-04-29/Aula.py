@@ -13,8 +13,8 @@ Cabeçalho do pacote (16 bytes)
 '''
 # [0-3]   → Timestamp (segundos)
 # [4-7]   → Timestamp (microsegundos)
-# [8-11]  → incl_len (tamanho capturado)
-# [12-15] → orig_len (tamanho original)
+# [8-12]  → incl_len (tamanho capturado)
+# [12-16] → orig_len (tamanho original)
 '''
 Estrutura do quadro Ethernet (14 bytes) [Cabeçalho Ethernet] + [Dados]
 '''

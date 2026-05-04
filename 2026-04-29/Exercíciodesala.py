@@ -20,6 +20,7 @@ abreArquivo = open(arquivo, "rb") # Abre o arquivo como bytes.
 cabArquivo = abreArquivo.read(24) # Lê os primeiros 24 bytes do arquivo que é o HLEN (Cabeçalho)
 
 magic = int.from_bytes(cabArquivo[:4], 'big') # Lê os 4 primeiros bytes do HLEN que é o Magic Number (Big ou Little Endian).
+endian = ''
 if magic == 0xA1B2C3D4: # Verifica se os bytes do arquivo vão ser lidos como Big ou Little Endian
     endian = 'big'
 elif magic == 0xA1B23C4D:
@@ -37,24 +38,25 @@ while cabPacote: # Enquanto no cabeçalho do pacote.
 
     quantPacotes += 1 # A cada cabeçalho de pacote aberto é mais um no contador de pacotes.
 
-    tamanhoOrig = cabPacote[12:15] # Pega o tamanho original do pacote.
+    tamanhoOrig = cabPacote[12:16] # Pega o tamanho original do pacote.
 
-    tamanhoPac = int.from_bytes(cabPacote[8:11], endian) # Pega o tamanho capturado do pacote, o que vou realmente usar.
+    tamanhoPac = int.from_bytes(cabPacote[8:12], endian) # Pega o tamanho capturado do pacote, o que vou realmente usar.
 
     pacote = abreArquivo.read(tamanhoPac) # Lê o tamanho do pacote capturado.
 
-    if pacote[12:14] == b'\x08\x00':
-        quantPACIPv4 += 1
+    if pacote[12:14] == b'\x08\x00': # Verifica se é IPv4, que é o que quero.
+        
+        quantPACIPv4 += 1 # Contador de pacotes IPv4 recebe mais um.
 
-        protocolo = pacote[23]
+        protocolo = pacote[23] # Pega qual protocolo o pacote IPv4 está levando.
 
-        if protocolo == 6:
-            quantTCP += 1
-        elif protocolo == 17:
-            quantUDP += 1
+        if protocolo == 6: # Se for 6 é TCP.
+            quantTCP += 1 # Contador de protocolos TCP recebe mais um.
+        elif protocolo == 17: # Se for 17 é UDP
+            quantUDP += 1 # Contador de protocolos UDP recebe mais um.
 
-        ipOrigem = pacote[26:30]
-        ipDestino = pacote[30:34]
+        ipOrigem = pacote[26:30] # Pega o IP de origem
+        ipDestino = pacote[30:34] # Pega o IP de destino
 
         chave = (ipOrigem, ipDestino)
         conexoes[chave] = conexoes.get(chave, 0) + 1
