@@ -46,7 +46,7 @@ Por fim, o funcionamento do **RAID5** é similar ao **RAID4**. No entanto, a fim
 
 <img width="692" height="251" alt="fig3" src="https://github.com/user-attachments/assets/b90f0e1c-b45d-4c64-bb6f-a9fbe1b2f7d2" />
 
-Opcionalmente, faça uma nova versão do programa, mas agora usando o **RAID5** (10 bônus por esse desenvolvimento).
+Opcionalmente, faça uma nova ver são do programa, mas agora usando o **RAID5** (10 bônus por esse desenvolvimento).
                                 
 										   
 Faça uma nova versão do programa, mas agora usando o RAID5
