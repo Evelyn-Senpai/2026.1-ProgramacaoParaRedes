@@ -13,20 +13,6 @@ Faça um programa que recebe o nome de um arquivo <b>pcap</b> na linha de comand
 - Se o protocolo transportado no enlace for IPv4:
   - Mostre os endereços IPv4 de origem e destino;
   - Outros quatro campos do IPv4 à sua escolha;
-- Se o protocolo transportado no IPv4 for ICMP:
-  - Mostre o nome do tipo do pacote (basta cinco, ignore outros)
-  - Para ```echo request``` e ```echo reply```, mostre o número de identificação e o número de sequência.
-- Se o protocolo transportado no IPv4 for UDP:
-  - Mostre as portas de origem e destino do datagrama;
-- Se o protocolo transportado no IPv4 for TCP:
-  - Mostre as portas de origem e destino do datagrama;
-  - Exiba mais quatro campos a sua escolha;
-    
-Ao final, mostre:
-- o IP da máquina que mais trocou dados usando IPv4 com a máquina de captura, indicando a quantidade de bytes.
-- qual o intervalo de tempo em que os pacotes foram capturados.
-
-Não é permitido o uso de bibliotecas não nativas do Python.
 '''
 import os
 
@@ -46,45 +32,36 @@ else:
 
 cabPacote = abreArquivo.read(16) # Lê o cabeçalho do primeiro pacote (cada pacote tem 16 bytes).
 
-MACs = set() # Coleção para armazenar MACs únicos.
-IPs = set() # Coleção para armazenar os IPv4.
-
-while cabPacote:
+while cabPacote: # Percorre cada pacote.
+  print('--- PACOTE ---')
 
   tamanhoPac = int.from_bytes(cabPacote[8:12], endian) # Pega o tamanho capturado do pacote, o que vou realmente usar.
 
   pacote = abreArquivo.read(tamanhoPac) # Lê o tamanho do pacote capturado.
 
-  MACs.add(pacote[0:6]) # Adiciona o MAC de destino.
-  MACs.add(pacote[6:12]) # Adiciona o MAC de origem.
+  macDestino = ':'.join(f"{x:02x}" for x in pacote[0:6]) # Pega o MAC de destino, em cada byte converte em um hexadecimal de 2 dígitos e separa por :.
+  macOrigem = ':'.join(f"{x:02x}" for x in pacote[6:12]) # Pega o MAC de origem, em cada byte converte em um hexadecimal de 2 dígitos e separa por :.
+  print(f'MAC addresses de destino: {macDestino}') # Print do MAC de destino.
+  print(f'MAC addresses de origem: {macOrigem}') # Print do MAC de origem.
 
-  if pacote[12:14] == b'\x08\x00': # Verifica se é IPv4, que é o que quero.
+  if pacote[12:14] == b'\x08\x00': # Verifica se é IPv4.
+    ipDestino = '.'.join(map(str, pacote[30:34])) # Pega o IP de destino em bytes e converte cada parte em string dividindo por '.'.
+    ipOrigem = '.'.join(map(str, pacote[26:30])) # Pega o IP de origem em bytes e converte cada parte em string dividindo por '.'.
+    print(f'IP de destino: {ipDestino}') # Print do IP de destino.
+    print(f'IP de origem: {ipOrigem}') # Print do IP de origem.
 
     protocolo = pacote[23] # Pega qual protocolo o pacote IPv4 está levando.
+    print(f'Protocolo: {protocolo}') # Print de qual protocolo o pacote IPv4 está levando. 
 
     versao = pacote[14] >> 4 # Pega o primeiro byte do IPv4 (a versão do protocolo IPv4 (4)).
+    print(f'Versão do pacote IPv4: {versao}') # Print da versão do IPv4 (4).
 
-    IPs.add(pacote[26:30]) # Adiciona o IP de origem
-    IPs.add(pacote[30:34]) # Adiciona o IP de destino
+    tosIPv4 = pacote[15] # Pega o tipo de serviço que o pacote IPv4 está levando.
+    print(f'Tipo de serviço IPv4: {tosIPv4}') # Print do tipo do serviço IPv4.
 
+    tamIPv4 = int.from_bytes(pacote[16:18], 'big') # Pega o tamanho do pacote IPv4 ('big' porque pacotes IPv4 sempre são big endian).
+    print(f'Tamanho do pacote IPv4: {tamIPv4} bytes') # Print do tamanho do pacote IPv4.
+  
   cabPacote = abreArquivo.read(16) # Lê o próximo pacote.
 
-print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
-
-forMACs = set() # Coleção para armazenar MACs únicos formatados.
-for MAC in MACs: # Pega cada MAC
-  macFormatado = ':'.join(f"{x:02x}" for x in MAC) # Pega cada byte, converte em um hexadecimal de 2 dígitos, separa em :. 
-  forMACs.add(macFormatado) # Adiciona o MAC formatado.
-print('----------------------------------------------------------------')
-print(f'MAC addresses de destino e origem do frame: {forMACs}') # Print dos MACs formatados.
-print('----------------------------------------------------------------')
-forIPs = set() #Coleção para armazenar IPv4 únicos formtados.
-for IP in IPs:
-  ipFormatado = '.'.join(map(str, IP))
-  forIPs.add(ipFormatado) # Adiciona o IP formatado.
-print(f'Endereços IPv4 de destino e origem: {forIPs}') # Print dos IPs formatados.
-print(f'Protocolo que o IPv4 está levando: {protocolo}') # Print de qual protocolo o pacote IPv4 está levando.
-print(f'Versão do IPv4: {versao}')
-print('----------------------------------------------------------------')
-print('=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-')
 abreArquivo.close()    # Fechamento do arquivo.
