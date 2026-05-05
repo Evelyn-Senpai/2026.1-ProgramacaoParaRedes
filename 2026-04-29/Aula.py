@@ -24,6 +24,17 @@ Estrutura do quadro Ethernet (14 bytes) [Cabeçalho Ethernet] + [Dados]
 '''
 Estrutura do pacote IPv4 (20 bytes (no mínimo)) [Cabeçalho IPv4] + [Dados]
 '''
+# [0]   Versão + IHL
+# [1]   Tipo de serviço (DSCP/ECN)
+# [2-3] Tamanho total
+# [4-5] Identificação
+# [6-7] Flags + Fragment Offset
+# [8]   TTL
+# [9]   Protocolo
+# [10-11] Checksum do cabeçalho
+# [12-15] IP de origem
+# [16-19] IP de destino
+# [20+] Opções (se houver)
 # [23] Protocolo (6 = TCP, 17 = UDP) → offset variável (depende do IHL(IHL × 4 = tamanho do cabeçalho))
 # [26-29] → IP origem
 # [30-33] → IP destino
