@@ -28,21 +28,19 @@ Ao final, mostre:
 
 Não é permitido o uso de bibliotecas não nativas do Python.
 '''
-import os, sys
+import sys
 
-nomeArquivo = input('Digite o nome do arquivo: ') # Pega o arquivo no formatado TCPDUMP.
+nomeArquivo = sys.argv[1] # Pega o nome do arquivo que foi digitado na linha de comando.
 
-diretorio = os.path.dirname(__file__) # Procura o arquivo na pasta que está esse exercício.
-arquivo = os.path.join(diretorio, nomeArquivo) # Monta o caminho do arquivo.
-abreArquivo = open(arquivo, "rb") # Abre o arquivo como bytes.
+abreArquivo = open(nomeArquivo, "rb") # Abre o arquivo como bytes.
 
 cabArquivo = abreArquivo.read(24) # Lê os primeiros 24 bytes do arquivo que é o HLEN (Cabeçalho)
 
-magic = int.from_bytes(cabArquivo[:4], 'big') # Lê os 4 primeiros bytes do HLEN que é o Magic Number (Big ou Little Endian) para identificar a ordem dos bytes.
-if magic in (0xA1B2C3D4, 0xA1B23C4D): # Verifica se os bytes do arquivo vão ser lidos como Big ou Little Endian
-    endian = 'big'
-else:
-    endian = 'little'
+magic = cabArquivo[:4] # Lê os 4 primeiros bytes do HLEN que é o Magic Number (Big ou Little Endian) para identificar a ordem dos bytes.
+if magic in (b'\xa1\xb2\xc3\xd4', b'\xa1\xb2\x3c\x4d'): # Verifica se os bytes do arquivo vão ser lidos como Big Endian ou Big Endian em nano segundos.
+  endian = 'big'
+elif magic in (b'\xd4\xc3\xb2\xa1', b'\x4d\x3c\xb2\xa1'): # Verifica se os bytes do arquivo vão ser lidos como Little Endian ou Little Endian em nano segundos.
+  endian = 'little'
 
 cabPacote = abreArquivo.read(16) # Lê o cabeçalho do primeiro pacote (cada pacote tem 16 bytes).
 
