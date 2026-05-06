@@ -11,14 +11,17 @@ Entre as fotos escolha até 10 e mostre uma rota entre elas, apresentando-a no *
 As únicas bibliotecas permitidas são ```subprocess``` e ```struct```. 
 '''
 import sys
-# print('----------')
-# print(sys.argv)
-# print(len(sys.argv))
-# if len(sys.argv) < 2:
-#     sys.argv.append(input("Seu nome: "))
 
-# for nome in sys.argv[1]:
-#     print('Olá ', nome)
+nomeJPEG = sys.argv[1] # Pega o nome da foto JPEG que foi digitado na linha de comando.
 
-caminho = sys.argv("C:\Users\20252014050023\OneDrive\Imagens\Camera Roll")
-print(caminho)
+abreJPEG = open(nomeJPEG, 'rb') # Abre a foto JPEG e lê como bytes.
+
+cabJEP = abreJPEG.read(4) # Pega os quatro primeiros bytes da foto JPEG.
+
+identificador = int.from_bytes(cabJEP, 'big') & 0x0F
+
+if identificador == b'\xff\xe1':
+    print('É EXIF')
+
+
+abreJPEG.close()
