@@ -10,18 +10,10 @@ Entre as fotos escolha até 10 e mostre uma rota entre elas, apresentando-a no *
 
 As únicas bibliotecas permitidas são ```subprocess``` e ```struct```. 
 '''
-import sys
+import sys, os
 
-nomeJPEG = sys.argv[1] # Pega o nome da foto JPEG que foi digitado na linha de comando.
+pasta = sys.argv[1] # A pasta que será digitada na linha de comando.
 
-abreJPEG = open(nomeJPEG, 'rb') # Abre a foto JPEG e lê como bytes.
+fotos = os.listdir(pasta) # Uma lista das fotos que estão na pasta.
 
-cabJEP = abreJPEG.read(4) # Pega os quatro primeiros bytes da foto JPEG.
-
-identificador = int.from_bytes(cabJEP, 'big') & 0x0F
-
-if identificador == b'\xff\xe1':
-    print('É EXIF')
-
-
-abreJPEG.close()
+print(fotos)
