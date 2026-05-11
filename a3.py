@@ -51,3 +51,104 @@ Opcionalmente, faça uma nova ver são do programa, mas agora usando o **RAID5**
 										   
 Faça uma nova versão do programa, mas agora usando o RAID5
 '''
+import os
+
+def inicializaRAID(q, t, p): # Função que cria e armazena os discos. 
+    for i in range(0, q-1): # De acordo com a quantidade de discos informados, menos um, porque o último disco tem que ser o de paridade.
+        caminho = os.path.join(p, f'disco{i}.bin') # Pega o caminho que está a pasta para criar o disco.
+        
+        disco = open(caminho, 'wb+') # Abre/cria o disco em formato de bytes.
+        disco.write(b'\x00' * t) # Escreve no disco de acordo com o tamanho informado.
+        disco.close() # Fecha o disco.
+    
+    discoParidade = os.path.join(p, f'discoX.bin') # Cria o disco de paridade.
+    paridade = bytearray(t) # Um array vazio com o tamanho que foi informado para os discos que foram digitados.
+
+    discos = os.listdir(p) # Uma lista dos discos que estão na pasta.
+    for disco in discos: # Em cada nome do disco.
+        if disco != 'discoX.bin': # Se o disco não for o de paridade, porque o disco de paridade não entra no cálculo da própria paridade.
+            caminho = os.path.join(p, disco) # Pega o caminho que o disco está, ou seja, pega o disco.
+
+            abreDisco = open(caminho, 'rb') # Abre/cria em formatado de bytes.        
+            dados = abreDisco.read() # Lê o conteúdo do disco.
+
+            for i in range(len(dados)): # Em cada byte que está em dados.
+                paridade[i] ^= dados[i] # Em cada posição no array de bytes, recebe um xor dos dados de cada disco naquela posição. 
+
+    abreParidade = open(discoParidade, 'wb') # Abre/cria o disco de paridade.
+    abreParidade.write(paridade) # Escreve a paridade no disco de paridade.
+    abreParidade.close() # Fecha o disco de paridade.
+
+def obtemRAID(q, p): # Função para verificar os discos criados.
+    discos = os.listdir(p) # Uma lista dos discos que estão na pasta.
+    
+    ausentes = 0 # Para contar quantos discos estão ausentes.
+
+    for i in range(q-1): # De acordo com a quantidade informada.
+        if f'disco{i}.bin' in discos: # Se o disco estiver na lista da pasta de discos.
+            print(f'disco{i}.bin criado com sucesso.') # Print do disco que foi criado com sucesso.
+        
+        else: # Se o disco estiver ausente.
+            print(f'disco{i}.bin ausente.') # Print do disco que está ausente, ou seja, que deveria ter sido criado.
+            
+            ausentes += 1 # Se o disco estiver ausente, o contador recebe mais um.
+
+    if f'discoX.bin' in discos: # Se o disco de paridade estiver na lista da pasta de discos.
+        print(f'discoX.bin criado com sucesso.') # Print do disco de paridade que foi criado com sucesso.
+        
+    else: # Se o disco de paridade estiver ausente.
+        print(f'discoX.bin ausente.') # Print do disco de paridade que está ausente.
+            
+        ausentes += 1 # Se o disco estiver ausente, o contador recebe mais um.
+
+    if ausentes >= 2: # Se tiver mais de um disco ausente, o RAID será inválido.
+        print('Mais de um disco ausente!\n --- RAID inválido ---') # Print do RAID inválido.
+        return # O programa não deve continuar.
+
+    else: # Se não, o RAID será válido.
+        print('--- RAID válido ---') # Print do RAID válido.
+
+def reconstroiRAID(q, t, p): # Função para construir um disco ausente.
+    discos = os.listdir(p) # Uma lista dos discos que estão na pasta.
+
+    nomeAusente = None # Para guardar o nome do disco ausente.
+
+    for i in range(q-1): # De acordo com a quantidade informada.
+        if f'disco{i}.bin' not in discos: # Se o disco não estiver na lista da pasta de discos.
+            nomeAusente = f'disco{i}.bin' # Pega o nome do disco que está ausente.       
+
+    if f'discoX.bin' not in discos: # Se o disco de paridade não estiver na lista da pasta de discos.
+        nomeAusente = 'discoX.bin' # Pega o nome do disco de paridade que está ausente.
+
+    if nomeAusente is not None: # Se o nomeAusente não estiver vazio, ou seja, tem um disco ausente, ele vai reconstruir o disco.
+        caminhoAusente = os.path.join(p, nomeAusente) # Caminho do disco ausente.
+        novoDisco= open(caminhoAusente, 'wb') # Abre/cria o novo disco, ou seja, o disco que estava ausente.
+
+        for i in range(t): # Para cada byte do tamanho.
+            byteRecuperado = 0 # Cada byte do novo disco, vai ser um byte xor do discoX com outro disco, ou seja, um byte recuperado.
+
+            for disco in discos: # Para cada disco na lista de discos.
+                if disco != nomeAusente: # Se não for o novo disco criado.
+                    caminho = os.path.join(p, disco) # Pega o caminho que o disco está, ou seja, pega o disco.
+                    
+                    abreDisco = open(caminho, 'rb') # Abre em formatado de bytes.
+                    abreDisco.seek(i) # Vai até a posição i, e em posição em posição.
+                    
+                    byte = abreDisco.read(1) # Lê esse byte.
+                    byteRecuperado ^= byte[0] # Byte recuperado recebe o xor do byte.
+
+                    abreDisco.close() # Fechamento do disco existente.
+
+            novoDisco.write(bytes([byteRecuperado])) # Escreve o byte recuperado no novo disco.
+
+        novoDisco.close() # Ao final, fecha o novo disco.
+
+        print(f'{nomeAusente} reconstruído com sucesso.')
+
+quantidadeDiscos = int(input('Quantos discos serão utilizados em RAID4? ')) # Pergunta quantos discos vão ser criados.
+tamanhoDiscos = int(input('Qual vai ser o tamanho dos discos em bytes? ')) # Pergunta qual vai ser o tamanho dos discos em bytes.
+pastaDiscos = str(input('Em qual pasta os discos devem ser criados? ')) # Pergunta de onde os discos devem ser criados.
+print('-------------------------------------------------------')
+inicializaRAID(quantidadeDiscos, tamanhoDiscos, pastaDiscos) # Chamada da função para criar os discos e armazena-los.
+obtemRAID(quantidadeDiscos, pastaDiscos) # Chamada da função que verifica os discos criados.
+reconstroiRAID(quantidadeDiscos, tamanhoDiscos, pastaDiscos) # Chamada da função que reconstroi um disco faltante.
