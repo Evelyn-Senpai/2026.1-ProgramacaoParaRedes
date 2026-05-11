@@ -10,7 +10,7 @@ Responder:
 '''
 import os
 
-nomeArquivo = input('Digite o nome do arquivo: ') # Pega o arquivo no formatado TCPDUMP.
+nomeArquivo = input('Digite o nome do arquivo: ') # Pega o arquivo no formato TCPDUMP.
 
 diretorio = os.path.dirname(__file__) # Procura o arquivo na pasta que está esse exercício.
 arquivo = os.path.join(diretorio, nomeArquivo) # Monta o caminho do arquivo.

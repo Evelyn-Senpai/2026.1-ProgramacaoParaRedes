@@ -21,7 +21,7 @@ coordenadas = [] # Lista para guardar as coordenadas das imagens.
 for imagem in imagens: # Pega cada nome de cada uma das imagens.
     caminho = os.path.join(pasta, imagem) # Pega o caminho que a imagem está, ou seja, pega a imagem.
 
-    abreImagem = open(caminho, 'rb') # Abre em formatado de bytes.
+    abreImagem = open(caminho, 'rb') # Abre em formato de bytes.
 
     cabImagem = abreImagem.read(4) # Lê os quatro primeiros bytes da imagem.
 
