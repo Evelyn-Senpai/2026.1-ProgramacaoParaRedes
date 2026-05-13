@@ -52,7 +52,7 @@ Opcionalmente, faça uma nova ver são do programa, mas agora usando o **RAID5**
 Faça uma nova versão do programa, mas agora usando o RAID5
 '''
 
-
+'''
 ## RAID4
 
 import os
@@ -316,9 +316,8 @@ while True: # Enquanto for verdade.
 
     else: # Se não for nenhuma das opções acima.
         print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.
-
-
 '''
+
 ## RAID5
 
 import os
@@ -477,4 +476,3 @@ quantBytes = int(input('Quantos bytes deseja ler? ')) # Pergunta quantos bytes a
 lerRAID(existePosicao, quantBytes, quantidadeDiscos, pastaDiscos) # Chamada da função para ler determinada quantidade de bytes em determinada posição.
 apagarDisco = int(input('Informe qual disco deseja remover: ')) # Chamada da função para remover determinado disco do RAID5.
 removeDiscoRAID(apagarDisco, pastaDiscos) # Chamada da função que remove o disco indicado.
-'''
