@@ -455,7 +455,9 @@ def lerRAID(e, b, q, p): # Função que lê determinado conteúdo no disco de ac
 
     abreDisco = open(caminho, 'rb') # Abre o disco em formato de bytes.
     abreDisco.seek(linha) # Pula para a posição desejada.
+
     print(f'- {b} Bytes do disco{disco}.bin a partir da posição {linha}: {abreDisco.read(b)}') # Print do conteúdo de acordo com a quantidade de bytes informada.
+    
     abreDisco.close() # Fecha o disco.    
 
 def removeDiscoRAID(a, p): # Função que remove um determinado disco do RAID5.
