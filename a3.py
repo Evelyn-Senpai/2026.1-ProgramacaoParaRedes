@@ -318,6 +318,7 @@ while True: # Enquanto for verdade.
         print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.
 '''
 
+
 ## RAID5
 
 import os
@@ -332,46 +333,7 @@ def inicializaRAID(q, t, p): # Função que cria e armazena os discos.
 
         disco.close() # Fecha o disco.
 
-def escreveRAID(c, p, q, pd): # Função que escreve um conjunto de dados em determinado disco.
-    linha = p // (q-1) # Como no RAID5 os disco são compartilhados, é como imaginar que todos os discos formam uma tabela, assim se deve descobrir a linha, ou seja, em qual linha do RAID o dado será gravado.
-
-    coluna = p % (q-1) # Descobre qual a coluna daquela linha, para achar exatamente a posição lógica do dado que será armazenado.
-
-    paridade = linha % q # Descobre a posição armazena a paridade naquela linha.
-
-    if coluna >= paridade: # Se a coluna for maior ou igual a paridade, ou seja, se o dado que será armazenado estiver na mesma posição que a paridade, ou maior porque no RAID5 precisamos pular o disco que está armazenando a paridade naquela linha.
-        disco = coluna + 1 # Pula o disco de paridade para encontrar o disco real do dado.
-
-    else: # Se não
-        disco = coluna # O disco é igual a coluna, ou seja, é a posição onde o dado será armazenado.
-
-    caminho = os.path.join(pd, f'disco{disco}.bin') # Pega o caminho que o disco está.
-
-    abreDisco = open(caminho, 'rb+') # Abre o disco em formato de bytes.
-    abreDisco.seek(linha) # Pula para a posição da linha.
-    abreDisco.write(c.encode("utf-8")) # Escreve o conjunto de dados, em bytes, na posição.
-    abreDisco.close() # Fecha o disco.
-
-    xor = 0 # Para armazenar o xor (paridade) que será atualizada.
-
-    for i in range(q): # Enquanto na quantidade de discos.
-        if i != paridade: # Se não for o disco que armazena a paridade daquela linha.
-            caminho = os.path.join(pd, f'disco{i}.bin') # Pega o caminho que o disco está.
-            abreDisco = open(caminho, 'rb') # Abre o disco em formato de bytes.
-            abreDisco.seek(linha) # Pula para a posição da linha.
-            
-            byte = abreDisco.read(1) # Lê o byte daquela linha.
-
-            if byte: # Se consegui ler.
-                xor ^= byte[0] # Cálculo da paridade, um xor daquele byte.
-
-            abreDisco.close() # Fecha o disco.
-
-    caminhoParidade = os.path.join(pd, f'disco{paridade}.bin') # Caminho do disco que vai receber a paridade atualizada.
-    abreParidade = open(caminhoParidade, 'rb+') # Abre o disco como bytes.
-    abreParidade.seek(linha) # Pula para a posição da linha.
-    abreParidade.write(bytes([xor])) # Escreve o byte da paridade calculada.
-    abreParidade.close() # Fecha o disco.
+        print(f'- disco{i}.bin criado com sucesso.') # Print do disco que foi criado com sucesso.
   
 def obtemRAID(q, p): # Função para verificar os discos criados.
     discos = os.listdir(p) # Uma lista dos discos que estão na pasta.
@@ -380,7 +342,7 @@ def obtemRAID(q, p): # Função para verificar os discos criados.
 
     for i in range(q): # De acordo com a quantidade informada.
         if f'disco{i}.bin' in discos: # Se o disco estiver na lista da pasta de discos.
-            print(f'- disco{i}.bin criado com sucesso.') # Print do disco que foi criado com sucesso.
+            print(f'- disco{i}.bin presente.') # Print do disco que está presente.
         
         else: # Se o disco estiver ausente.
             print(f'- disco{i}.bin ausente.') # Print do disco que está ausente, ou seja, que deveria ter sido criado.
@@ -430,6 +392,51 @@ def reconstroiRAID(q, t, p): # Função para construir um disco ausente.
 
         print(f'{nomeAusente} reconstruído com sucesso.')
 
+def escreveRAID(c, p, q, pd): # Função que escreve um conjunto de dados em determinado disco.
+    linha = p // (q-1) # Como no RAID5 os disco são compartilhados, é como imaginar que todos os discos formam uma tabela, assim se deve descobrir a linha, ou seja, em qual linha do RAID o dado será gravado.
+
+    coluna = p % (q-1) # Descobre qual a coluna daquela linha, para achar exatamente a posição lógica do dado que será armazenado.
+
+    paridade = linha % q # Descobre a posição armazena a paridade naquela linha.
+
+    if coluna >= paridade: # Se a coluna for maior ou igual a paridade, ou seja, se o dado que será armazenado estiver na mesma posição que a paridade, ou maior porque no RAID5 precisamos pular o disco que está armazenando a paridade naquela linha.
+        disco = coluna + 1 # Pula o disco de paridade para encontrar o disco real do dado.
+
+    else: # Se não
+        disco = coluna # O disco é igual a coluna, ou seja, é a posição onde o dado será armazenado.
+
+    caminho = os.path.join(pd, f'disco{disco}.bin') # Pega o caminho que o disco está.
+
+    abreDisco = open(caminho, 'rb+') # Abre o disco em formato de bytes.
+    abreDisco.seek(linha) # Pula para a posição da linha.
+    abreDisco.write(c.encode("utf-8")) # Escreve o conjunto de dados, em bytes, na posição.
+    abreDisco.close() # Fecha o disco.
+
+    print(f'- Dados inseridos em disco{disco}.bin com sucesso.') # Print para informar que os dados foram inseridos no disco certo de acordo com a posição informada.
+
+    xor = 0 # Para armazenar o xor (paridade) que será atualizada.
+
+    for i in range(q): # Enquanto na quantidade de discos.
+        if i != paridade: # Se não for o disco que armazena a paridade daquela linha.
+            caminho = os.path.join(pd, f'disco{i}.bin') # Pega o caminho que o disco está.
+            abreDisco = open(caminho, 'rb') # Abre o disco em formato de bytes.
+            abreDisco.seek(linha) # Pula para a posição da linha.
+            
+            byte = abreDisco.read(1) # Lê o byte daquela linha.
+
+            if byte: # Se consegui ler.
+                xor ^= byte[0] # Cálculo da paridade, um xor daquele byte.
+
+            abreDisco.close() # Fecha o disco.
+
+    caminhoParidade = os.path.join(pd, f'disco{paridade}.bin') # Caminho do disco que vai receber a paridade atualizada.
+    abreParidade = open(caminhoParidade, 'rb+') # Abre o disco como bytes.
+    abreParidade.seek(linha) # Pula para a posição da linha.
+    abreParidade.write(bytes([xor])) # Escreve o byte da paridade calculada.
+    abreParidade.close() # Fecha o disco.
+
+    print('- Paridade atualizada com sucesso.')
+
 def lerRAID(e, b, q, p): # Função que lê determinado conteúdo no disco de acordo com a posição indicada e a quantidade de bytes que deseja ler.
     # A lógica para encontrar o disco de acordo com a posição é a mesma feita na função escreveRAID.
     linha = e // (q-1) # Como no RAID5 os disco são compartilhados, é como imaginar que todos os discos formam uma tabela, assim se deve descobrir a linha, ou seja, em qual linha do RAID o dado será gravado.
@@ -462,17 +469,49 @@ def removeDiscoRAID(a, p): # Função que remove um determinado disco do RAID5.
     else: # Se o disco informado não existir. 
         print('- Disco não encontrado.') # Print para informar que o disco não foi encontrado.
 
-quantidadeDiscos = int(input('Quantos discos serão utilizados em RAID5? ')) # Pergunta quantos discos vão ser criados em RAID5.
-tamanhoDiscos = int(input('Qual vai ser o tamanho dos discos em bytes? ')) # Pergunta qual vai ser o tamanho dos discos em bytes.
-pastaDiscos = str(input('Em qual pasta os discos devem ser criados? ')) # Pergunta onde os discos devem ser criados.
-inicializaRAID(quantidadeDiscos, tamanhoDiscos, pastaDiscos) # Chamada da função para criar os discos e armazena-los na pasta informada.
-conjuntoDados = str(input('Qual conjunto de dados inserir no RAID? ')) # Pergunta qual conjunto de dados o usuário quer inserir.
-posicao = int(input('Em qual posição deseja inserir? ')) # Pergunta em qual posição ele quer inserir o conjunto de dados, ou seja, em qual disco.
-escreveRAID(conjuntoDados, posicao, quantidadeDiscos, pastaDiscos) # Chamada da função para inserir um conjunto de dados em um posição.
-obtemRAID(quantidadeDiscos, pastaDiscos) # Chamada da função que verifica os discos criados.
-reconstroiRAID(quantidadeDiscos, tamanhoDiscos, pastaDiscos) # Chamada da função que reconstroi um disco faltante.
-existePosicao = int(input('Qual posição deseja ler? ')) # Pergunta qual posição o usuário deseja ler.
-quantBytes = int(input('Quantos bytes deseja ler? ')) # Pergunta quantos bytes a partir daquela posição o usuário deseja ler.
-lerRAID(existePosicao, quantBytes, quantidadeDiscos, pastaDiscos) # Chamada da função para ler determinada quantidade de bytes em determinada posição.
-apagarDisco = int(input('Informe qual disco deseja remover: ')) # Chamada da função para remover determinado disco do RAID5.
-removeDiscoRAID(apagarDisco, pastaDiscos) # Chamada da função que remove o disco indicado.
+while True: # Enquanto for verdade.
+    print('=== MENU RAID5 ===') # Menu de opções
+    print('[1] - Inicializar RAID') # Opção 1 para inicializar o RAID.
+    print('[2] - Obter RAID') # Opção 2 que obtem (verifica) o RAID.
+    print('[3] - Reconstruir RAID') # Opção 3 que reconstroi um disco ausente no RAID.
+    print('[4] - Escrever RAID') # Opção 4 que escreve um conjunto de dados em determinada posição no RAID.
+    print('[5] - Ler RAID') # Opção 5 que lê um determinado número de bytes a partir de determinada posição no RAID.
+    print('[6] - Remover RAID') # Opção 6 que remove determinado disco no RAID.
+    print('[7] - Sair') # Opção 7 que finaliza o programa.
+    
+    opcao = int(input('Qual opção deseja? ')) # Pergunta de qual opção o usuário deseja.
+    
+    if opcao == 1: # Se a opção for 1.
+            quantidadeDiscos = int(input('Quantos discos serão utilizados em RAID5? ')) # Pergunta quantos discos vão ser criados em RAID5.
+            tamanhoDiscos = int(input('Qual vai ser o tamanho dos discos em bytes? ')) # Pergunta qual vai ser o tamanho dos discos em bytes.
+            pastaDiscos = str(input('Em qual pasta os discos devem ser criados? ')) # Pergunta onde os discos devem ser criados.
+
+            inicializaRAID(quantidadeDiscos, tamanhoDiscos, pastaDiscos) # Chamada da função para criar os discos e armazena-los na pasta informada.
+
+    elif opcao == 2: # Se a opção for 2.
+        obtemRAID(quantidadeDiscos, pastaDiscos) # Chamada da função que verifica os discos criados.
+
+    elif opcao == 3: # Se a opção for 3.
+        reconstroiRAID(quantidadeDiscos, tamanhoDiscos, pastaDiscos) # Chamada da função que reconstroi um disco faltante.
+
+    elif opcao == 4: # Se a opção for 4.
+        conjuntoDados = str(input('Qual conjunto de dados inserir no RAID? ')) # Pergunta qual conjunto de dados o usuário quer inserir.
+        posicao = int(input('Em qual posição deseja inserir? ')) # Pergunta em qual posição ele quer inserir o conjunto de dados, ou seja, em qual disco.
+        escreveRAID(conjuntoDados, posicao, quantidadeDiscos, pastaDiscos) # Chamada da função para inserir um conjunto de dados em um posição.
+
+    elif opcao == 5: # Se a opção for 5.
+        existePosicao = int(input('Qual posição deseja ler? ')) # Pergunta qual posição o usuário deseja ler.
+        quantBytes = int(input('Quantos bytes deseja ler? ')) # Pergunta quantos bytes a partir daquela posição o usuário deseja ler.
+        lerRAID(existePosicao, quantBytes, quantidadeDiscos, pastaDiscos) # Chamada da função para ler determinada quantidade de bytes em determinada posição.
+        
+    elif opcao == 6: # Se a opção for 6.
+        apagarDisco = int(input('Informe qual disco deseja remover: ')) # Chamada da função para remover determinado disco do RAID5.
+        removeDiscoRAID(apagarDisco, pastaDiscos) # Chamada da função que remove o disco indicado.
+
+    elif opcao == 7: # Se a opção for 7.
+        print('=== Programa encerrado ===') # Print do encerramento do programa.
+        break # O programa para.
+
+    else: # Se não for nenhuma das opções acima.
+        print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.
+                    
