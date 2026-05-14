@@ -407,58 +407,120 @@ def escreveRAID(c, p, q, pd): # Função que escreve um conjunto de dados em det
 
     caminho = os.path.join(pd, f'disco{disco}.bin') # Pega o caminho que o disco está.
 
-    abreDisco = open(caminho, 'rb+') # Abre o disco em formato de bytes.
-    abreDisco.seek(linha) # Pula para a posição da linha.
-    abreDisco.write(c.encode("utf-8")) # Escreve o conjunto de dados, em bytes, na posição.
-    abreDisco.close() # Fecha o disco.
+    dados = c.encode("utf-8") # Transforma o conjunto de dados em bytes.
 
-    print(f'- Dados inseridos em disco{disco}.bin com sucesso.') # Print para informar que os dados foram inseridos no disco certo de acordo com a posição informada.
+    for i in range(len(dados)): # Em cada byte que está em dados.
+        posicaoAtual = p + i # Para descobrir a posição lógica de cada byte.
 
-    xor = 0 # Para armazenar o xor (paridade) que será atualizada.
+        linha = posicaoAtual // (q-1) # Pega a linha, ou seja, em qual linha do RAID o dado será gravado.
 
-    for i in range(q): # Enquanto na quantidade de discos.
-        if i != paridade: # Se não for o disco que armazena a paridade daquela linha.
-            caminho = os.path.join(pd, f'disco{i}.bin') # Pega o caminho que o disco está.
-            abreDisco = open(caminho, 'rb') # Abre o disco em formato de bytes.
+        coluna = posicaoAtual % (q-1) # Descobre qual a coluna daquela linha, para achar exatamente a posição lógica do dado que será armazenado.
+
+        paridade = linha % q # Descobre a posição armazena a paridade naquela linha.
+
+        if coluna >= paridade: # Se a coluna for maior ou igual a paridade, ou seja, se o dado que será armazenado estiver na mesma posição que a paridade, ou maior porque no RAID5 precisamos pular o disco que está armazenando a paridade naquela linha.
+            disco = coluna + 1 # Pula o disco de paridade para encontrar o disco real do dado.
+
+        else: # Se não
+            disco = coluna # O disco é igual a coluna, ou seja, é a posição onde o dado será armazenado.
+
+        caminho = os.path.join(pd, f'disco{disco}.bin') # Pega o caminho que o disco está.
+
+        if os.path.exists(caminho): # Se o caminho existir.
+            abreDisco = open(caminho, 'rb+') # Abre o disco em formato de bytes.
             abreDisco.seek(linha) # Pula para a posição da linha.
-            
+            abreDisco.write(bytes([dados[i]])) # Escreve o byte, em bytes, na posição.
+            abreDisco.close() # Fecha o disco.
+
+            print(f'- Dados inseridos em disco{disco}.bin com sucesso.') # Print para informar que os dados foram inseridos no disco certo de acordo com a posição informada.
+
+        else: # Se o caminho não existir.
+            print(f'- disco{disco}.bin está ausente.') # Print para informar que o disco está ausente.
+            print('- Os dados não foram escritos diretamente no disco.') # Print para informar que os dados não foram gravados diretamente no disco.
+
+        xor = dados[i] # O xor tem que ser igual o byte novo que será gravado.
+
+        for discoAtual in range(q): # Enquanto na quantidade de discos.
+            if discoAtual != paridade and discoAtual != disco: # Se não for o disco que armazena a paridade daquela linha e o disco atual for diferente do disco, ou seja, se não for o ausente.
+                caminhoDisco = os.path.join(pd, f'disco{discoAtual}.bin') # Pega o caminho que o disco está.
+                
+                if os.path.exists(caminhoDisco): # Se o caminho existe.
+                    abreDisco = open(caminhoDisco, 'rb') # Abre o disco em formato de bytes.
+                    abreDisco.seek(linha) # Pula para a posição da linha.
+                
+                    byte = abreDisco.read(1) # Lê o byte daquela linha.
+
+                    if byte: # Se foi possível a leitura.
+                        xor ^= byte[0] # Cálculo da paridade, um xor daquele byte. 
+
+                    abreDisco.close() # Fecha o disco.
+
+        caminhoParidade = os.path.join(pd, f'disco{paridade}.bin') # Caminho do disco que vai receber a paridade atualizada.
+    
+        abreParidade = open(caminhoParidade, 'rb+') # Abre o disco como bytes.
+        abreParidade.seek(linha) # Pula para a posição da linha.
+        abreParidade.write(bytes([xor])) # Escreve o byte da paridade calculada.
+        abreParidade.close() # Fecha o disco.
+
+        print('- Paridade atualizada com sucesso.') # Print para informa que a paridade foi atualizado com sucesso.
+
+def lerRAID(e, b, q, p): # Função que lê determinado conteúdo no disco de acordo com a posição indicada e a quantidade de bytes que deseja ler.
+    bytesLidos = bytearray() # Para armazenar os bytes lidos.
+    
+    for i in range(b): # Enquanto em cada byte desejado.
+        posicaoAtual = e + i # Para descobrir a posição lógica de cada byte.
+
+        linha = posicaoAtual // (q-1) # Pega a linha, ou seja, em qual linha do RAID o dado será lido.
+
+        coluna = posicaoAtual % (q-1) # Descobre qual a coluna daquela linha, para achar exatamente a posição lógica do dado que será lido.
+
+        paridade = linha % q # Descobre a posição armazena a paridade naquela linha.
+
+        if coluna >= paridade: # Se a coluna for maior ou igual a paridade, ou seja, se o dado que será armazenado estiver na mesma posição que a paridade, ou maior porque no RAID5 precisamos pular o disco que está armazenando a paridade naquela linha.
+            disco = coluna + 1 # Pula o disco de paridade para encontrar o disco real do dado.
+
+        else: # Se não
+            disco = coluna # O disco é igual a coluna, ou seja, é a posição onde o dado será armazenado.
+
+        caminho = os.path.join(p, f'disco{disco}.bin') # Pega o caminho que o disco está.
+
+        if os.path.exists(caminho): # Se o caminho existir.
+            abreDisco = open(caminho, 'rb') # Abre o disco em formato de bytes.
+            abreDisco.seek(linha) # Pula para a posição desejada.
+
             byte = abreDisco.read(1) # Lê o byte daquela linha.
 
-            if byte: # Se consegui ler.
-                xor ^= byte[0] # Cálculo da paridade, um xor daquele byte.
+            if byte: # Se foi possível a leitura.       
+                bytesLidos.append(byte[0]) # Recebe cada byte lido.
 
             abreDisco.close() # Fecha o disco.
 
-    caminhoParidade = os.path.join(pd, f'disco{paridade}.bin') # Caminho do disco que vai receber a paridade atualizada.
-    abreParidade = open(caminhoParidade, 'rb+') # Abre o disco como bytes.
-    abreParidade.seek(linha) # Pula para a posição da linha.
-    abreParidade.write(bytes([xor])) # Escreve o byte da paridade calculada.
-    abreParidade.close() # Fecha o disco.
+            print(f'- {b} Bytes do disco{disco}.bin a partir da posição {linha}: {bytes(bytesLidos)}') # Print do conteúdo de acordo com a quantidade de bytes informada.        
 
-    print('- Paridade atualizada com sucesso.')
+        else: # Se o caminho não existir (caso o disco tenha sido removido).
+            print(f'- disco{disco}.bin está ausente.') # Print para informar que o disco está ausente.
+            print('- Os dados foram recuperados usando XOR.') # Print para informar que os dados foram recuperados usando XOR (paridade).
 
-def lerRAID(e, b, q, p): # Função que lê determinado conteúdo no disco de acordo com a posição indicada e a quantidade de bytes que deseja ler.
-    # A lógica para encontrar o disco de acordo com a posição é a mesma feita na função escreveRAID.
-    linha = e // (q-1) # Como no RAID5 os disco são compartilhados, é como imaginar que todos os discos formam uma tabela, assim se deve descobrir a linha, ou seja, em qual linha do RAID o dado será gravado.
+            xor = 0 # Para armazenar o xor (paridade) que será calculada.
 
-    coluna = e % (q-1) # Descobre qual a coluna daquela linha, para achar exatamente a posição lógica do dado que será armazenado.
-    
-    paridade = linha % q # Descobre a posição armazena a paridade naquela linha.
+            for discoAtual in range(q): # Enquanto na quantidade de discos.
+                if discoAtual != disco: # Se o disco atual for diferente do disco, ou seja, se não for o ausente.
+                    caminhoDisco = os.path.join(p, f'disco{discoAtual}.bin') # Pega o caminho que o disco está.
+                    
+                    if os.path.exists(caminhoDisco): # Se o caminho existe.
+                        abreDisco = open(caminhoDisco, 'rb') # Abre o disco em formato de bytes.
+                        abreDisco.seek(linha) # Pula para a posição da linha.
+                    
+                        byte = abreDisco.read(1) # Lê o byte daquela linha.
 
-    if coluna >= paridade: # Se a coluna for maior ou igual a paridade, ou seja, se o dado que será armazenado estiver na mesma posição que a paridade, ou maior porque no RAID5 precisamos pular o disco que está armazenando a paridade naquela linha.
-        disco = coluna + 1 # Pula o disco de paridade para encontrar o disco real do dado.
+                        if byte: # Se foi possível a leitura.
+                            xor ^= byte[0] # Cálculo da paridade, um xor daquele byte. 
 
-    else: # Se não
-        disco = coluna # O disco é igual a coluna, ou seja, é o disco física.
+                        abreDisco.close() # Fecha o disco.
 
-    caminho = os.path.join(p, f'disco{disco}.bin') # Pega o caminho que o disco desejado está.
+            bytesLidos.append(xor) # Recebe cada byte recuperado lido.
 
-    abreDisco = open(caminho, 'rb') # Abre o disco em formato de bytes.
-    abreDisco.seek(linha) # Pula para a posição desejada.
-
-    print(f'- {b} Bytes do disco{disco}.bin a partir da posição {linha}: {abreDisco.read(b)}') # Print do conteúdo de acordo com a quantidade de bytes informada.
-    
-    abreDisco.close() # Fecha o disco.    
+            print(f'- {b} Bytes recuperados do disco{disco}.bin ausente a partir da posição {linha}: {bytes(bytesLidos)}') # Print dos bytes recuperados do disco ausente de acordo com a quantidade de bytes informada e a posição.
 
 def removeDiscoRAID(a, p): # Função que remove um determinado disco do RAID5.
     caminho = os.path.join(p, f'disco{a}.bin') # Pega o caminho que está o disco informado.
