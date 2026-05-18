@@ -318,7 +318,7 @@ while True: # Enquanto for verdade.
         print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.
 '''
 
-
+'''
 ## RAID5
 
 import os
@@ -579,3 +579,4 @@ while True: # Enquanto for verdade.
     else: # Se não for nenhuma das opções acima.
         print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.
                     
+'''
