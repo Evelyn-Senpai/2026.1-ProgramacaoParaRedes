@@ -577,6 +577,5 @@ while True: # Enquanto for verdade.
         break # O programa para.
 
     else: # Se não for nenhuma das opções acima.
-        print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.
-                    
+        print('--- Opção inválida. ---') # Print de que a opção é inválida e o menu aparece novamente.                 
 '''
