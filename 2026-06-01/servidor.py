@@ -13,18 +13,17 @@ print(f'Escutando em ({my_ip}:{PORT})')
 
 my_sock.bind((my_ip, PORT))
 
-clientes = []
+clientes = set()
 
 msg = b''
 while msg != END:
     msg, source = my_sock.recvfrom(512)
 
-    if source not in clientes:
-        clientes.append(source)
+    clientes.update({source})
 
-    print(f'Recebi/devolvendo a {source}:{msg}')
+    for cliente in clientes:
+        if cliente != source:
+            my_sock.sendto(msg, source)
 
-    my_sock.sendto(msg, source)
-
-print(f'Recebi fim. Servidor encerrado.')    
+print(f'Recebi {END}. Servidor encerrado.')    
 my_sock.close()

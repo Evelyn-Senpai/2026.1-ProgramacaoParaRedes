@@ -10,13 +10,13 @@ while msg != END:
     msg = input('Mensagem: ').encode()
 
     if msg:
-        print(f'Enviando: {msg}')
+        print(f'Enviado: {msg}')
 
         my_sock.sendto(msg, (server_ip, PORT))
 
-        answer, source = my_sock.recvfrom(512)
+    answer, source = my_sock.recvfrom(512)
 
-        print(f'Recebido de {source}: {answer}')
+    print(f'Recebido de {source}: {answer}')
 
 print(f'Digitado {END}. Cliente encerrado.')
 my_sock.close()
