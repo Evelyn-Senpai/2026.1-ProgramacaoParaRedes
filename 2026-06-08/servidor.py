@@ -23,4 +23,3 @@ while True:
 
     print('Finalizando Conexão do Cliente ', cliente)
     con.close()
-    
