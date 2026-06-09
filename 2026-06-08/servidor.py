@@ -19,7 +19,7 @@ while True:
         msg = con.recv(1024) # Buffer de 1024 bytes
         if not msg: break
         # Imprimindo a mensagem recebida convertendo de bytes para string
-        print(cliente, msg[0].decode('utf-8'))
+        print(cliente, msg.decode('utf-8'))
 
     print('Finalizando Conexão do Cliente ', cliente)
     con.close()
