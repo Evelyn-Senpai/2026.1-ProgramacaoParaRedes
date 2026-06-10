@@ -83,6 +83,6 @@ else:
     print('uso: python site resouce output_filename')
     print('Exemplos:')
     print(' python httpclient1.py httpbin.org /image/png porco.png')
-    print(' python httpclient1.py viacep.com.br /ws/59062570/json/ meucep.json')
     print(' python httpclient1.py httpbin.org /image/jpeg lobo.jpg')
-
+    print(' python httpclient1.py viacep.com.br /ws/59062570/json/ meucep.json')
+    print(' python httpclient2.py viacep.com.br /ws/Rn/Natal/Silva ruassilvas.json')
