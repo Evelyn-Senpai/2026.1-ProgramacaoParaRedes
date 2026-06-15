@@ -85,4 +85,4 @@ else: # Se não.
     print(' python httpclient1.py httpbin.org /image/png porco.png')
     print(' python httpclient1.py httpbin.org /image/jpeg lobo.jpg')
     print(' python httpclient1.py viacep.com.br /ws/59062570/json/ meucep.json')
-    print(' python httpclient1.py viacep.com.br /ws/Rn/Natal/Silva ruassilvas.json')
+    print(' python httpclient1.py viacep.com.br /ws/Rn/Natal/Silva ruassilva.json')
