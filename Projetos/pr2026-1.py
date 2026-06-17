@@ -1,0 +1,1 @@
+'''Quebrador de senhas'''
