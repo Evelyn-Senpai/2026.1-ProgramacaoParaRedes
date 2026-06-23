@@ -93,3 +93,4 @@ else:
     print (f" python {sys.argv[0]} viacep.com.br /ws/59062570/json/ meucep.json")
     print (f" python {sys.argv[0]} httpbin.org /image/jpeg lobo.jpg")
 my_sock.close()
+
